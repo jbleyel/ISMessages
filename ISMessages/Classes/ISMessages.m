@@ -245,8 +245,20 @@ static NSMutableArray* currentAlertArray = nil;
         
         CGFloat screenWidth = [UIScreen mainScreen].bounds.size.width;
         CGFloat screenHeight = [UIScreen mainScreen].bounds.size.height;
-        CGFloat alertYPosition = [[UIApplication sharedApplication] statusBarFrame].size.height == 20.f ? [[UIApplication sharedApplication] statusBarFrame].size.height : [[UIApplication sharedApplication] statusBarFrame].size.height + 5.f;
-        
+
+
+        CGFloat alertYPosition = 0.0;
+
+        if (@available(iOS 13.0, *)) {
+            UIWindow *keyWindow = [UIApplication.sharedApplication.windows firstObject];
+            CGFloat statusBarHeight = keyWindow.safeAreaInsets.top;
+            alertYPosition = statusBarHeight == 0 ? 20.0 : statusBarHeight + 5.0;
+        } else {
+            alertYPosition = [UIApplication sharedApplication].statusBarFrame.size.height == 20.f
+                ? [UIApplication sharedApplication].statusBarFrame.size.height
+                : [UIApplication sharedApplication].statusBarFrame.size.height + 5.f;
+        }
+
         if (_alertPosition == ISAlertPositionBottom) {
             alertYPosition = screenHeight - _alertViewHeight - 10.f;
             if (@available(iOS 11.0, *)) {
